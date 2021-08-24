@@ -1,9 +1,15 @@
 package com.reactive.demo.entity;
 
+import com.reactive.demo.mapping.Entity;
+import com.reactive.demo.mapping.OneToMany;
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
-
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.Singular;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
@@ -11,19 +17,13 @@ import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.MappedCollection;
 import org.springframework.data.relational.core.mapping.Table;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Table("operation_period_effect")
-public class OperationPeriodEffectEntity {
+public class OperationPeriodEffectEntity implements Entity<UUID> {
 
 	@Id
 	@Column("operation_period_effect_id")
@@ -51,8 +51,9 @@ public class OperationPeriodEffectEntity {
 	private OperationType operationType;
 
 	@MappedCollection(idColumn = "operation_period_effect_id")
+	@OneToMany
 	@Singular
-	private Set<OperationTaxEntity> taxes;
+	private List<OperationTaxEntity> taxes;
 
 	@Transient
 	private boolean isNew;

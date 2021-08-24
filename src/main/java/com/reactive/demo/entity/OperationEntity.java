@@ -1,5 +1,7 @@
 package com.reactive.demo.entity;
 
+import com.reactive.demo.mapping.Entity;
+import com.reactive.demo.mapping.OneToMany;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -25,7 +27,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 @Table("operation")
-public class OperationEntity {
+public class OperationEntity implements Entity<UUID> {
 
 	@Transient
 	private boolean isNew;
@@ -51,6 +53,7 @@ public class OperationEntity {
 	@Column("code")
 	private String code;
 
+	@OneToMany
 	@MappedCollection(idColumn = "operation_id")
 	@Singular
 	private List<OperationPeriodEffectEntity> periodEffects = new ArrayList<>();

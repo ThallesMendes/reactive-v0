@@ -1,11 +1,18 @@
 package com.reactive.demo.service;
 
 import com.reactive.demo.entity.OperationEntity;
+import com.reactive.demo.entity.OperationPeriodEffectEntity;
+import com.reactive.demo.entity.OperationTaxEntity;
+import com.reactive.demo.mapping.ResultMapperRelations;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Component
@@ -47,10 +54,27 @@ public class OperationReactiveCustomRepositoryImpl
         .map(mapper::apply)
         .all()
         .reduce((previous, current) -> {
-          var periodEffects = new ArrayList<>(previous.getPeriodEffects());
-          periodEffects.addAll(current.getPeriodEffects());
+
+          final var rowMapper = new ResultMapperRelations();
+
+          return rowMapper.mapper(previous, current);
+
+          /** var periodEffects = new ArrayList<>(previous.getPeriodEffects());
+
+          final var periodEffect = current.getPeriodEffects().stream().findFirst().orElseThrow();
+
+          periodEffects.stream()
+              .filter(p -> p.getId().equals(periodEffect.getId()))
+              .findFirst()
+              .ifPresentOrElse(period -> {
+                final var taxes = new ArrayList<>(period.getTaxes());
+                taxes.addAll(periodEffect.getTaxes());
+                period.setTaxes(new HashSet<>(taxes));
+
+              },() -> periodEffects.addAll(current.getPeriodEffects()));
+
           previous.setPeriodEffects(periodEffects);
-          return previous;
+          return previous; */
         });
   }
 }

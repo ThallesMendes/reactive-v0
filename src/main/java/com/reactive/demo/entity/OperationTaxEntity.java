@@ -1,5 +1,6 @@
 package com.reactive.demo.entity;
 
+import com.reactive.demo.mapping.Entity;
 import java.util.UUID;
 
 import org.springframework.data.annotation.Id;
@@ -20,7 +21,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 @Table("operation_tax")
-public class OperationTaxEntity {
+public class OperationTaxEntity implements Entity<UUID> {
 
 	@Id
 	@Column("operation_tax_id")
